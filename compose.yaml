@@ -1,0 +1,26 @@
+services:
+  db:
+    container_name: postgresql_container
+    image: postgres
+    environment:
+              - POSTGRES_DB=myDb
+              - POSTGRES_PASSWORD=password
+              - POSTGRES_USER=admin
+    ports:
+      - 5432
+    volumes:
+      - c:/postgres_data_part:/var/lib/postgresql/data
+    restart: always
+
+  backend:
+    build: .
+    container_name: demo_app_container
+    ports:
+      - '8089:8089'
+    environment:
+      db-url: jdbc:postgresql://db:5432/myDb
+      db-username: admin
+      db-password: password
+    depends_on:
+      - db
+    restart: always
